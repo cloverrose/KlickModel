@@ -1,10 +1,15 @@
 package com.github.cloverrose.klickmodel.params
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.cloverrose.klickmodel.domain.SearchSession
 
 abstract class ParamEM: Param() {
     private var PROB_MIN = 0.000001
+
+    @JsonProperty("n")
     private var numerator: Double = 1.0
+
+    @JsonProperty("d")
     private var denominator: Double = 5.0
 
     protected fun incNumerator() {

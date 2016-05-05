@@ -1,5 +1,8 @@
 package com.github.cloverrose.klickmodel.models.ubm
 
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.cloverrose.klickmodel.domain.SearchSession
 import com.github.cloverrose.klickmodel.inferences.EMInference
 import com.github.cloverrose.klickmodel.inferences.Inference
@@ -14,9 +17,29 @@ internal val EXAM = "exam"
 
 class AttrContainer: QueryDocumentParamContainer<ParamEM>(){
     override fun createParam() = UBMAttrEM()
+
+    override fun fromJson(json: String) {
+        val mapper = jacksonObjectMapper()
+
+        val module = SimpleModule()
+        module.addAbstractTypeMapping(ParamEM::class.java, UBMAttrEM::class.java)
+        mapper.registerModule(module)
+
+        container = mapper.readValue(json)
+    }
 }
 class ExamContainer(maxRank: Int): RankPrevClickParamContainer<ParamEM>(maxRank) {
     override fun createParam() = UBMExamEM()
+
+    override fun fromJson(json: String) {
+        val mapper = jacksonObjectMapper()
+
+        val module = SimpleModule()
+        module.addAbstractTypeMapping(ParamEM::class.java, UBMExamEM::class.java)
+        mapper.registerModule(module)
+
+        container = mapper.readValue(json)
+    }
 }
 
 class UBM: ClickModel<ParamEM>() {
@@ -80,5 +103,13 @@ class UBM: ClickModel<ParamEM>() {
         val attr = attrContainer.get(searchSession.query, searchSession.webResults[rank].id).value()
         val exam = examContainer.get(rank, rankPrevClick).value()
         return attr * exam
+    }
+
+    override fun fromJson(json: String) {
+        val mapper = jacksonObjectMapper()
+
+        val jsonData: Map<String, String> = mapper.readValue(json)
+        this.attrContainer.fromJson(jsonData[ATTR]!!)
+        this.examContainer.fromJson(jsonData[EXAM]!!)
     }
 }

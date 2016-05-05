@@ -8,4 +8,6 @@ abstract class ParamContainer<T: Param> {
     abstract fun getForSessionAtRank(searchSession: SearchSession, rank: Int): T
     abstract fun applyEach(func: (T) -> Unit)
     abstract fun createParam(): T
+    abstract fun toJson(): String
+    abstract fun fromJson(json: String)
 }

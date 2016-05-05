@@ -1,10 +1,11 @@
 package com.github.cloverrose.klickmodel.paramcontainers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.cloverrose.klickmodel.domain.SearchSession
 import com.github.cloverrose.klickmodel.params.Param
 
 abstract class RankPrevClickParamContainer<T: Param>(maxRank: Int): ParamContainer<T>() {
-    private var container: MutableList<MutableList<T>>
+    protected var container: MutableList<MutableList<T>>
     init {
         container = mutableListOf()
         for(i in 0 until maxRank) {
@@ -44,5 +45,11 @@ abstract class RankPrevClickParamContainer<T: Param>(maxRank: Int): ParamContain
 
         val prevClickRank = if (prevClickRanks.size > 0) prevClickRanks.last() else clicks.size - 1
         return prevClickRank
+    }
+
+    override fun toJson(): String {
+        val mapper = jacksonObjectMapper()
+
+        return mapper.writeValueAsString(container)
     }
 }

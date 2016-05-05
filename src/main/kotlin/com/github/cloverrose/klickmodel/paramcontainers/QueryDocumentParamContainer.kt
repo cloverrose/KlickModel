@@ -1,10 +1,11 @@
 package com.github.cloverrose.klickmodel.paramcontainers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.cloverrose.klickmodel.domain.SearchSession
 import com.github.cloverrose.klickmodel.params.Param
 
 abstract class QueryDocumentParamContainer<T: Param>: ParamContainer<T>() {
-    private var container: MutableMap<String, MutableMap<String, T>> = mutableMapOf()
+    protected var container: MutableMap<String, MutableMap<String, T>> = mutableMapOf()
 
     override fun size() = container.size
 
@@ -36,5 +37,11 @@ abstract class QueryDocumentParamContainer<T: Param>: ParamContainer<T>() {
                 func(param)
             }
         }
+    }
+
+    override fun toJson(): String {
+        val mapper = jacksonObjectMapper()
+
+        return mapper.writeValueAsString(container)
     }
 }

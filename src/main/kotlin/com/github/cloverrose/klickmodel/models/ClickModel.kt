@@ -1,5 +1,6 @@
 package com.github.cloverrose.klickmodel.models
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.cloverrose.klickmodel.domain.SearchSession
 import com.github.cloverrose.klickmodel.inferences.Inference
 import com.github.cloverrose.klickmodel.paramcontainers.ParamContainer
@@ -38,4 +39,16 @@ abstract class ClickModel<T: Param> {
     fun createNewModel(): ClickModel<T> {
         return this.javaClass.newInstance()
     }
+
+    fun toJson(): String {
+        val mapper = jacksonObjectMapper()
+
+        val jsonData: MutableMap<String, Any> = mutableMapOf()
+        for ((paramName, paramContainer) in getParams()) {
+            jsonData[paramName] = paramContainer.toJson()
+        }
+        return mapper.writeValueAsString(jsonData)
+    }
+
+    abstract fun fromJson(json: String)
 }
