@@ -25,3 +25,6 @@ hs_err_pid*
 /build/
 gradle.properties
 local.properties
+
+# download from https://github.com/markovi/PyClick/blob/master/examples/data/YandexRelPredChallenge
+YandexRelPredChallenge
