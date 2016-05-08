@@ -21,14 +21,6 @@ abstract class QueryDocumentParamContainer<T: Param>: ParamContainer<T>() {
         return c[resultId]!!
     }
 
-    fun set(param: T, query: String, resultId: String) {
-        if (query !in container) {
-            container[query] = mutableMapOf()
-        }
-        var c = container[query]!!
-        c[resultId] = param
-    }
-
     override fun getForSessionAtRank(searchSession: SearchSession, rank: Int) = get(searchSession.query, searchSession.webResults[rank].id)
 
     override fun applyEach(func: (T) -> Unit) {
