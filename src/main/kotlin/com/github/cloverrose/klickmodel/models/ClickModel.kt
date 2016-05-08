@@ -16,7 +16,7 @@ abstract class ClickModel<T: Param> {
     }
 
     fun getSessionParams(searchSession: SearchSession): List<Map<String, T>> {
-        val paramContainers: Map<String, ParamContainer<T>> = this.getParams()
+        val paramContainers = getParams()
 
         var sessionParams: MutableList<Map<String, T>> = mutableListOf()
         for (rank in searchSession.webResults.indices) {

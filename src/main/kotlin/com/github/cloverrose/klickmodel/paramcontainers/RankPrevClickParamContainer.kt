@@ -25,10 +25,6 @@ abstract class RankPrevClickParamContainer<T: Param>(maxRank: Int): ParamContain
         return this.container[_rank][_rankPrevClick]
     }
 
-    fun set(param: T, rank: Int, rankPrevClick: Int) {
-        this.container[rank][rankPrevClick] = param
-    }
-
     override fun getForSessionAtRank(searchSession: SearchSession, rank: Int) = get(rank, getPrevClickedRank(searchSession, rank))
 
     override fun applyEach(func: (T) -> Unit) {
