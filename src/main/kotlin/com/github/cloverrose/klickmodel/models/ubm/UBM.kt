@@ -15,7 +15,7 @@ import com.github.cloverrose.klickmodel.params.ParamEM
 internal val ATTR = "attr"
 internal val EXAM = "exam"
 
-class AttrContainer: QueryDocumentParamContainer<ParamEM>(){
+internal class AttrContainer: QueryDocumentParamContainer<ParamEM>(){
     override fun createParam() = UBMAttrEM()
 
     override fun fromJson(json: String) {
@@ -28,7 +28,8 @@ class AttrContainer: QueryDocumentParamContainer<ParamEM>(){
         container = mapper.readValue(json)
     }
 }
-class ExamContainer(maxRank: Int): RankPrevClickParamContainer<ParamEM>(maxRank) {
+
+internal class ExamContainer(maxRank: Int): RankPrevClickParamContainer<ParamEM>(maxRank) {
     override fun createParam() = UBMExamEM()
 
     override fun fromJson(json: String) {
@@ -99,17 +100,17 @@ class UBM: ClickModel<ParamEM>() {
 
     override fun predictRelevance(query: String, resultId: String): Double = attrContainer.get(query, resultId).value()
 
-    fun getClickProb(searchSession: SearchSession, rank: Int, rankPrevClick: Int): Double {
-        val attr = attrContainer.get(searchSession.query, searchSession.webResults[rank].id).value()
-        val exam = examContainer.get(rank, rankPrevClick).value()
-        return attr * exam
-    }
-
     override fun fromJson(json: String) {
         val mapper = jacksonObjectMapper()
 
         val jsonData: Map<String, String> = mapper.readValue(json)
         this.attrContainer.fromJson(jsonData[ATTR]!!)
         this.examContainer.fromJson(jsonData[EXAM]!!)
+    }
+
+    private fun getClickProb(searchSession: SearchSession, rank: Int, rankPrevClick: Int): Double {
+        val attr = attrContainer.get(searchSession.query, searchSession.webResults[rank].id).value()
+        val exam = examContainer.get(rank, rankPrevClick).value()
+        return attr * exam
     }
 }
